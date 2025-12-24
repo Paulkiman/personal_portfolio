@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import Remarks from '@/components/Remarks';
@@ -11,14 +10,7 @@ import Registration from '@/components/Registration';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
-const App: React.FC = () => {
-  useEffect(() => {
-    // Initialize GSAP ScrollTrigger
-    if (typeof window !== 'undefined' && (window as any).gsap) {
-      (window as any).gsap.registerPlugin((window as any).ScrollTrigger);
-    }
-  }, []);
-
+export default function Home() {
   return (
     <div className="min-h-screen selection:bg-emerald-500 selection:text-white">
       <Header />
@@ -35,6 +27,4 @@ const App: React.FC = () => {
       <Footer />
     </div>
   );
-};
-
-export default App;
+}
