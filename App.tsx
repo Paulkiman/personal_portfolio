@@ -162,7 +162,7 @@ const App: React.FC = () => {
         <section id="stack" className="py-24 sm:py-28 lg:py-32 px-6 sm:px-10 lg:px-[10vw] bg-white text-black rounded-[3rem] md:rounded-[6rem] relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             <div className="lg:col-span-4">
-               <h2 className="syne text-5xl md:text-[65px] font-black uppercase tracking-tighter leading-none mb-4">Toolkit.</h2>
+               <h2 className="syne text-2xl md:text-[32px] font-black uppercase tracking-tighter leading-none mb-4">Toolkit.</h2>
                <p className="bricolage text-zinc-500 uppercase text-[9px] tracking-[0.4em] font-black">Industrial Standard Stack</p>
             </div>
             <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-y-12 gap-x-12">
