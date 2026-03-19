@@ -1,70 +1,21 @@
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { PROJECTS, EXPERIENCES, TECH_STACK } from './data';
 import { Project } from './types';
 import BubbleMenu from './components/BubbleMenu';
-import Loader from './components/Loader';
 import Marquee from './components/Marquee';
 import ProjectDrawer from './components/ProjectDrawer';
 import FloatingNav from './components/FloatingNav';
 
-// @ts-ignore
-import Lenis from 'https://esm.sh/lenis@1.1.18';
-
 const App: React.FC = () => {
-  const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    if (loading) return;
-
-    const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const progress = Math.min(scrollY / window.innerHeight, 1);
-      setScrollProgress(progress);
-
-      const revealEls = document.querySelectorAll('.reveal-content');
-      revealEls.forEach((el: any) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.9) {
-          el.classList.add('active');
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    
-    return () => {
-      lenis.destroy();
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [loading]);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: 'auto' });
     }
   };
-
-  if (loading) return <Loader onComplete={() => setLoading(false)} />;
-
-  // Calculate reveal shape size
-  const maskRadius = Math.max(0, scrollProgress * 150);
 
   return (
     <div className="bg-[#050505] min-h-screen">
@@ -72,67 +23,45 @@ const App: React.FC = () => {
       <BubbleMenu onNavigate={scrollToSection} />
       <ProjectDrawer project={selectedProject} onClose={() => setSelectedProject(null)} />
 
-      <header className="fixed top-12 left-12 z-50 mix-blend-difference pointer-events-none">
+      <header className="sticky top-0 z-50 bg-[#050505]/80 backdrop-blur border-b border-white/5">
+        <div className="px-6 sm:px-10 lg:px-[10vw] py-5 flex items-center justify-between">
         <h2 className="syne font-black text-base tracking-tighter uppercase leading-none">
-          PNK<span className="text-blue-600">.</span>
+          Paul Njogu Kimani<span className="text-blue-600">.</span>
         </h2>
+          <div className="bricolage text-[10px] uppercase tracking-[0.35em] text-zinc-500 font-black hidden sm:block">
+            Backend Software Engineer
+          </div>
+        </div>
       </header>
 
-      {/* Hero Section Container */}
-      <div className="relative h-screen w-full">
-        {/* Underneath Content (Experience Section Preview) */}
-        <div className="fixed inset-0 z-0 bg-blue-600/10 flex items-center justify-center pointer-events-none overflow-hidden">
-           <div 
-             className="syne text-[30vw] font-black tracking-tighter opacity-10 text-white transition-transform duration-300"
-             style={{ transform: `scale(${1 + scrollProgress})` }}
-           >
-             WORK
-           </div>
+      {/* Hero */}
+      <section id="home" className="py-24 sm:py-28 lg:py-32 px-6 sm:px-10 lg:px-[10vw]">
+        <div className="space-y-6 max-w-6xl">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-[1.5px] bg-blue-600"></div>
+            <p className="bricolage text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black">Industrial Backend Architect</p>
+          </div>
+          <h1 className="syne text-4xl sm:text-5xl md:text-[72px] font-extrabold leading-[0.95] tracking-tighter uppercase">
+            Architecting <br className="hidden sm:block" />
+            Systems that <br className="hidden sm:block" />
+            <span className="text-blue-600 italic underline decoration-1 underline-offset-8">Scale.</span>
+          </h1>
+          <div className="max-w-2xl">
+            <p className="bricolage text-base md:text-lg text-zinc-400 leading-relaxed font-light">
+              Engineering high-concurrency financial cores with Java Microservices and automated banking agents.
+            </p>
+          </div>
         </div>
-
-        {/* Hero Top Layer with Shape Mask */}
-        <section 
-          id="home" 
-          className="fixed inset-0 z-10 flex flex-col justify-center px-[10vw] bg-[#050505] pointer-events-auto"
-          style={{
-            clipPath: `circle(${100 - maskRadius}% at 50% 50%)`,
-            transition: 'clip-path 0.1s linear'
-          }}
-        >
-          <div className="space-y-6 max-w-6xl">
-            <div className="flex items-center gap-4 reveal-content active">
-               <div className="w-10 h-[1.5px] bg-blue-600"></div>
-               <p className="bricolage text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black">Industrial Backend Architect</p>
-            </div>
-            <h1 className="syne text-5xl md:text-[82px] font-extrabold leading-[0.9] tracking-tighter uppercase reveal-content active">
-              Architecting <br />
-              Systems that <br />
-              <span className="text-blue-600 italic underline decoration-1 underline-offset-8">Scale.</span>
-            </h1>
-            <div className="max-w-xl reveal-content active">
-              <p className="bricolage text-base md:text-lg text-zinc-400 leading-relaxed font-light">
-                Engineering high-concurrency financial cores with Java Microservices and automated banking agents. 
-              </p>
-            </div>
-          </div>
-
-          <div className="absolute bottom-12 left-[10vw] animate-bounce opacity-20">
-             <div className="w-[1px] h-12 bg-white"></div>
-          </div>
-        </section>
-      </div>
-
-      {/* Spacer for Hero Scroll Logic */}
-      <div className="h-screen pointer-events-none" />
+      </section>
 
       {/* Main Content Sections */}
       <div className="relative z-20 bg-[#050505]">
-        <Marquee text="Java • Node.js • Kafka • PostgreSQL • Redis • Microservices • Docker • CI/CD" />
+        <Marquee text="Java • Spring Boot • Node.js • Express • Sequelize • Prisma • PostgreSQL • Redis • RabbitMQ • Kafka • Docker • JWT • TypeScript" />
 
         {/* Experience Section */}
-        <section id="experience" className="py-40 px-[10vw] bg-[#070707]">
+        <section id="experience" className="py-24 sm:py-28 lg:py-32 px-6 sm:px-10 lg:px-[10vw] bg-[#070707]">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-5 sticky top-32 h-fit reveal-content">
+            <div className="lg:col-span-5 lg:sticky lg:top-32 h-fit">
               <h2 className="syne text-4xl md:text-[45px] font-extrabold uppercase tracking-tighter mb-8 leading-tight">
                 Industrial <br />Expertise.
               </h2>
@@ -143,7 +72,7 @@ const App: React.FC = () => {
             </div>
             <div className="lg:col-span-7 space-y-20">
               {EXPERIENCES.map((exp, i) => (
-                <div key={i} className="reveal-content" style={{ transitionDelay: `${i * 100}ms` }}>
+                <div key={i}>
                   <div className="space-y-8 group">
                     <h3 className="syne text-3xl font-extrabold uppercase tracking-tighter group-hover:text-blue-500 transition-all duration-500">{exp.role}</h3>
                     <div className="space-y-5">
@@ -156,9 +85,19 @@ const App: React.FC = () => {
                     </div>
                     <div className="flex flex-wrap gap-2 pt-4">
                       {exp.projects.map(p => (
-                        <span key={p} className="bricolage text-[8px] uppercase font-black tracking-widest text-zinc-600 border border-zinc-800 px-3 py-1.5 rounded-md hover:border-zinc-700 transition-colors cursor-default">
-                          {p}
-                        </span>
+                        p.projectId ? (
+                          <button
+                            key={p.label}
+                            onClick={() => setSelectedProject(PROJECTS.find(proj => proj.id === p.projectId) || null)}
+                            className="bricolage text-[8px] uppercase font-black tracking-widest text-zinc-400 border border-zinc-700 px-3 py-1.5 rounded-md hover:border-blue-500 hover:text-blue-400 transition-colors cursor-pointer"
+                          >
+                            {p.label}
+                          </button>
+                        ) : (
+                          <span key={p.label} className="bricolage text-[8px] uppercase font-black tracking-widest text-zinc-600 border border-zinc-800 px-3 py-1.5 rounded-md cursor-default">
+                            {p.label}
+                          </span>
+                        )
                       ))}
                     </div>
                   </div>
@@ -169,18 +108,17 @@ const App: React.FC = () => {
         </section>
 
         {/* Masonry Projects Catalog */}
-        <section id="projects" className="py-40 px-[10vw]">
-          <div className="mb-32 flex flex-col items-start reveal-content">
+        <section id="projects" className="py-24 sm:py-28 lg:py-32 px-6 sm:px-10 lg:px-[10vw]">
+          <div className="mb-16 sm:mb-20 lg:mb-24 flex flex-col items-start">
               <span className="bricolage text-[9px] uppercase tracking-[0.6em] text-blue-600 font-black mb-4">Engineering Catalog</span>
-              <h2 className="syne text-6xl md:text-[72px] font-black uppercase tracking-tighter leading-none">Modules.</h2>
+              <h2 className="syne text-5xl sm:text-6xl md:text-[72px] font-black uppercase tracking-tighter leading-none">Modules.</h2>
           </div>
           
           <div className="columns-1 md:columns-2 gap-12 space-y-12">
             {PROJECTS.map((project, idx) => (
               <div 
                 key={project.id} 
-                className="reveal-content break-inside-avoid"
-                style={{ transitionDelay: `${idx * 100}ms` }}
+                className="break-inside-avoid"
               >
                 <div 
                   onClick={() => setSelectedProject(project)}
@@ -196,9 +134,14 @@ const App: React.FC = () => {
                   <div className="p-10">
                      <div className="flex justify-between items-start mb-4">
                         <p className="bricolage text-[8px] uppercase tracking-[0.2em] text-blue-500 font-black">{project.type}</p>
-                        <div className="flex gap-1">
-                           <div className="w-1 h-1 rounded-full bg-blue-600"></div>
-                           <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
+                        <div className="flex items-center gap-2">
+                          {project.githubUrl && (
+                            <span className="bricolage text-[7px] uppercase tracking-widest text-zinc-600 border border-zinc-800 px-2 py-1 rounded-md font-black">GitHub</span>
+                          )}
+                          <div className="flex gap-1">
+                            <div className="w-1 h-1 rounded-full bg-blue-600"></div>
+                            <div className="w-1 h-1 rounded-full bg-zinc-800"></div>
+                          </div>
                         </div>
                      </div>
                      <h3 className="syne text-2xl font-extrabold uppercase tracking-tighter mb-3 group-hover:translate-x-1 transition-transform duration-500">{project.title}</h3>
@@ -216,15 +159,15 @@ const App: React.FC = () => {
         </section>
 
         {/* Toolkit Section */}
-        <section id="stack" className="py-40 px-[10vw] bg-white text-black rounded-[3rem] md:rounded-[6rem] relative z-10">
+        <section id="stack" className="py-24 sm:py-28 lg:py-32 px-6 sm:px-10 lg:px-[10vw] bg-white text-black rounded-[3rem] md:rounded-[6rem] relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <div className="lg:col-span-4 reveal-content">
+            <div className="lg:col-span-4">
                <h2 className="syne text-5xl md:text-[65px] font-black uppercase tracking-tighter leading-none mb-4">Toolkit.</h2>
                <p className="bricolage text-zinc-500 uppercase text-[9px] tracking-[0.4em] font-black">Industrial Standard Stack</p>
             </div>
             <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-y-12 gap-x-12">
               {TECH_STACK.map((tech, i) => (
-                <div key={i} className="reveal-content group" style={{ transitionDelay: `${i * 40}ms` }}>
+                <div key={i} className="group">
                    <div className="flex justify-between items-end mb-4">
                       <h4 className="syne text-xl font-black uppercase tracking-tighter group-hover:text-blue-600 transition-colors">{tech.name}</h4>
                       <span className="bricolage text-[10px] font-mono font-bold text-zinc-300">{tech.proficiency}%</span>
@@ -239,8 +182,8 @@ const App: React.FC = () => {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="min-h-screen px-[10vw] flex flex-col justify-center items-center text-center relative py-40">
-          <div className="reveal-content">
+        <section id="contact" className="min-h-screen px-6 sm:px-10 lg:px-[10vw] flex flex-col justify-center items-center text-center relative py-24 sm:py-28 lg:py-32">
+          <div>
             <h2 className="syne text-6xl md:text-[100px] font-black uppercase tracking-tighter leading-none mb-12">
               Secure the <br /><span className="text-blue-600 italic">Core.</span>
             </h2>

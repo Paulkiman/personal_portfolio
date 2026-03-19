@@ -3,9 +3,16 @@ export interface Project {
   id: string;
   title: string;
   description: string;
+  bullets: string[];
   tech: string[];
   type: 'Work' | 'Personal';
   imageUrl: string;
+  githubUrl?: string;
+}
+
+export interface ExperienceProject {
+  label: string;
+  projectId?: string;
 }
 
 export interface Experience {
@@ -13,7 +20,7 @@ export interface Experience {
   role: string;
   period: string;
   description: string[];
-  projects: string[];
+  projects: ExperienceProject[];
 }
 
 export interface TechItem {

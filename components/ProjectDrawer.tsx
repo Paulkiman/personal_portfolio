@@ -8,37 +8,31 @@ interface ProjectDrawerProps {
 }
 
 const ProjectDrawer: React.FC<ProjectDrawerProps> = ({ project, onClose }) => {
-  const [active, setActive] = useState(false);
   const [displayProject, setDisplayProject] = useState<Project | null>(null);
 
   useEffect(() => {
     if (project) {
       setDisplayProject(project);
       document.body.style.overflow = 'hidden';
-      setTimeout(() => setActive(true), 10);
     } else {
-      setActive(false);
-      const timer = setTimeout(() => {
-        document.body.style.overflow = 'unset';
-        setDisplayProject(null);
-      }, 700);
-      return () => clearTimeout(timer);
+      document.body.style.overflow = 'unset';
+      setDisplayProject(null);
     }
   }, [project]);
 
-  if (!displayProject && !active) return null;
+  if (!displayProject) return null;
 
   return (
-    <div className={`fixed inset-0 z-[250] flex items-end justify-center pointer-events-none ${active ? 'pointer-events-auto' : ''}`}>
+    <div className="fixed inset-0 z-[250] flex items-end justify-center">
       {/* Backdrop */}
       <div 
-        className={`absolute inset-0 bg-black/80 backdrop-blur-xl transition-opacity duration-700 ${active ? 'opacity-100' : 'opacity-0'}`}
+        className="absolute inset-0 bg-black/80 backdrop-blur-xl"
         onClick={onClose}
       />
       
       {/* Drawer Content */}
       <div 
-        className={`relative w-full max-w-6xl bg-[#080808] rounded-t-[2.5rem] border-t border-white/10 shadow-[0_-30px_60px_rgba(0,0,0,0.8)] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden ${active ? 'translate-y-0' : 'translate-y-full'}`}
+        className="relative w-full max-w-6xl bg-[#080808] rounded-t-[2.5rem] border-t border-white/10 shadow-[0_-30px_60px_rgba(0,0,0,0.8)] overflow-hidden"
         style={{ height: '90vh' }}
       >
         {/* Navigation / Close */}
@@ -60,24 +54,34 @@ const ProjectDrawer: React.FC<ProjectDrawerProps> = ({ project, onClose }) => {
             {/* Left Info */}
             <div className="lg:col-span-5 space-y-12">
               <div className="space-y-4">
-                <span className="bricolage text-[9px] uppercase tracking-[0.4em] text-blue-500 font-black">{displayProject?.type} Engineering</span>
+                <span className="bricolage text-[9px] uppercase tracking-[0.4em] text-blue-500 font-black">{displayProject.type} Engineering</span>
                 <h2 className="syne text-3xl md:text-5xl font-extrabold uppercase tracking-tighter leading-[0.95]">
-                  {displayProject?.title}
+                  {displayProject.title}
                 </h2>
               </div>
               
               <div className="space-y-6">
                 <h4 className="bricolage text-[10px] uppercase tracking-widest text-zinc-600 font-black">Overview</h4>
-                <p className="bricolage text-xl text-zinc-300 leading-relaxed font-light">
-                  {displayProject?.description}
+                <p className="bricolage text-base text-zinc-400 leading-relaxed font-light">
+                  {displayProject.description}
                 </p>
+                {displayProject.bullets && displayProject.bullets.length > 0 && (
+                  <div className="space-y-3 pt-2">
+                    {displayProject.bullets.map((bullet, i) => (
+                      <div key={i} className="flex gap-3">
+                        <span className="text-blue-600 shrink-0 mt-2 w-1.5 h-1.5 rounded-full ring-4 ring-blue-600/10"></span>
+                        <p className="bricolage text-sm text-zinc-400 leading-relaxed font-light">{bullet}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-8 py-8 border-y border-white/5">
                 <div>
                   <h4 className="bricolage text-[10px] uppercase tracking-widest text-zinc-600 font-black mb-4">Stack</h4>
                   <div className="flex flex-wrap gap-2">
-                    {displayProject?.tech.map(t => (
+                    {displayProject.tech.map(t => (
                       <span key={t} className="px-3 py-1 bg-white/5 rounded-md text-[8px] uppercase tracking-widest font-black text-blue-400 border border-blue-500/20">
                         {t}
                       </span>
@@ -90,17 +94,28 @@ const ProjectDrawer: React.FC<ProjectDrawerProps> = ({ project, onClose }) => {
                 </div>
               </div>
 
-              <button className="w-full group bg-white text-black font-black py-6 rounded-2xl transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 hover:bg-blue-600 hover:text-white">
-                Review Implementation Details <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
-              </button>
+              {displayProject.githubUrl ? (
+                <a
+                  href={displayProject.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full group bg-white text-black font-black py-6 rounded-2xl transition-all uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 hover:bg-blue-600 hover:text-white"
+                >
+                  View on GitHub <span className="text-lg group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+              ) : (
+                <div className="w-full py-6 rounded-2xl border border-white/5 text-center bricolage text-[10px] uppercase tracking-[0.2em] text-zinc-600 font-black">
+                  Proprietary — Source Restricted
+                </div>
+              )}
             </div>
 
             {/* Right Media */}
             <div className="lg:col-span-7">
               <div className="relative group overflow-hidden rounded-[2rem] border border-white/5 bg-zinc-900 shadow-2xl">
                 <img 
-                  src={displayProject?.imageUrl} 
-                  alt={displayProject?.title} 
+                  src={displayProject.imageUrl} 
+                  alt={displayProject.title} 
                   className="w-full aspect-square md:aspect-video object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-700" 
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />

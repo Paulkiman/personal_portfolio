@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Paul Njogu Kimani | Backend Software Engineer</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Bricolage+Grotesque:wght@300;400;600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -45,26 +44,6 @@
       border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
-    @keyframes marquee {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-marquee {
-      display: flex;
-      width: max-content;
-      animation: marquee 30s linear infinite;
-    }
-    
-    /* Reveal animations */
-    .reveal-content {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .reveal-content.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
   </style>
   <script type="importmap">
   {

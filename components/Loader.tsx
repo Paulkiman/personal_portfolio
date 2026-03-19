@@ -25,7 +25,7 @@ const Loader: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
       <div className={`w-full max-w-6xl flex flex-col md:flex-row justify-between items-end gap-8 transition-opacity duration-500 ${isExiting ? 'opacity-0' : 'opacity-100'}`}>
         <div className="overflow-hidden">
           <h1 className="syne text-7xl md:text-[120px] font-extrabold tracking-tighter leading-none m-0 animate-pulse">
-            PNK<span className="text-blue-600">.</span>
+            Paul Njogu Kimani<span className="text-blue-600">.</span>
           </h1>
         </div>
         <div className="flex flex-col items-end">

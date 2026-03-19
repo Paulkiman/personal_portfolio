@@ -1,30 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface FloatingNavProps {
   onNavigate: (section: string) => void;
 }
 
 const FloatingNav: React.FC<FloatingNavProps> = ({ onNavigate }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      // Show when scrolling up or at the very top
-      if (currentScrollY > 200) {
-        setIsVisible(currentScrollY < lastScrollY);
-      } else {
-        setIsVisible(false);
-      }
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
-
   const navItems = [
     { id: 'home', label: 'Home', icon: '◈' },
     { id: 'experience', label: 'Work', icon: '⚒' },
@@ -34,7 +15,7 @@ const FloatingNav: React.FC<FloatingNavProps> = ({ onNavigate }) => {
   ];
 
   return (
-    <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[200] transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-24 opacity-0 pointer-events-none'}`}>
+    <div className="sticky top-[72px] z-[60] px-6 sm:px-10 lg:px-[10vw]">
       <nav className="glass-morphism rounded-full px-2 py-2 flex items-center gap-1 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
         {navItems.map((item) => (
           <button

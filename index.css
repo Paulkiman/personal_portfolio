@@ -1,0 +1,31 @@
+/* Minimal global styles for the Vite app (kept intentionally small). */
+
+html, body {
+  scroll-behavior: auto;
+}
+
+/* Drawer content scrollbar styling (non-animated). */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) rgba(255,255,255,0.04);
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.04);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 999px;
+  border: 2px solid rgba(0,0,0,0.2);
+}
+
+/* Hard stop for any remaining animations/transitions. */
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
+}
+
